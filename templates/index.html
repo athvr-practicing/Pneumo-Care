@@ -1,69 +1,90 @@
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pneumonia Detection</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-        }
-        #upload-form {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        #image-preview {
-            width: 200px;
-            height: 200px;
-            margin-bottom: 10px;
-            border: 1px solid #ddd;
-            text-align: center;
-        }
-        #prediction {
-            font-weight: bold;
-            margin-top: 10px;
-        }
-    </style>
+    <title>Pneumocare - Pneumonia Detection</title>
+    <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
-    <h1>Pneumonia Detection</h1>
-    <p>Upload a chest X-ray image to check for pneumonia.</p>
-    <form id="upload-form" method="POST" enctype="multipart/form-data">
-        <label for="image">Select Image:</label>
-        <input type="file" id="image" name="image" accept="image/*" required>
-        <button type="submit">Upload</button>
-    </form>
-    <img id="image-preview" src="" alt="Uploaded Image Preview">
-    <p id="prediction"></p>
+    <header>
+        <div class="intro">
+            <h1>Pneumocare</h1>
+            <p>Welcome to Pneumocare, a platform dedicated to pneumonia detection through advanced X-ray analysis.</p>
+        </div>
+        <nav>
+            <button onclick="showSection('about')">About</button>
+            <button onclick="showSection('requirements')">Image Requirements</button>
+            <button onclick="showSection('upload')">Upload</button>
+        </nav>
+    </header>
+        <section id="about" class="content-section">
+            <h2>About</h2>
+            
+                <p>Pneumonia is an inflammation of the air sacs in the lungs (alveoli) and the surrounding tissue. It often leads to a sudden high fever, feeling unwell, a cough, and shortness of breath.</p>
+                <p>Because pneumonia is usually caused by bacteria, it can generally be treated effectively with antibiotics. Vaccinations that can prevent infection by certain germs are also available.</p>
+                <p>People in good health generally recover within a few weeks, but pneumonia shouldn't be taken lightly. It may take several months to regain full strength.</p>
+                
+                <h3>Types of Pneumonia</h3>
+                <p>Pneumonia can be caused by a variety of different pathogens, including bacteria, viruses, and fungi. The most common bacterial cause is <i>Streptococcus pneumoniae</i>, while viruses like the flu virus and respiratory syncytial virus (RSV) are also frequent culprits.</p>
+                <p>Other types of pneumonia include aspiration pneumonia (caused by inhaling food, liquid, or vomit) and fungal pneumonia, which can be seen in individuals with weakened immune systems.</p>
+                
+                <h3>Risk Factors</h3>
+                <p>While pneumonia can affect anyone, certain groups of people are at higher risk. These include children under 2 years old, adults over 65, people with chronic health conditions like asthma, COPD, or heart disease, and those with weakened immune systems due to conditions like cancer or HIV.</p>
+                <p>Smoking, a sedentary lifestyle, and poor nutrition can also increase the risk of developing pneumonia.</p>
+                
+                <h3>Diagnosis of Pneumonia</h3>
+                <p>Diagnosing pneumonia involves a physical examination, listening for crackling sounds in the lungs, and tests such as chest X-rays, blood tests, and sometimes sputum cultures to identify the specific cause of the infection.</p>
+                <p>X-rays play a crucial role in detecting pneumonia, as they can reveal fluid in the lungs, areas of inflammation, or infection. This is why the analysis of chest X-rays is integral in diagnosing pneumonia early and accurately.</p>
+                
+                <h3>Treatment and Prevention</h3>
+                <p>Treatment for pneumonia depends on the cause and severity. Antibiotics are used to treat bacterial pneumonia, while antiviral medications may be used for viral pneumonia. Supportive care, including rest, fluids, and fever-reducing medications, is often recommended as well.</p>
+                <p>Vaccines are available to prevent certain types of pneumonia, especially those caused by bacteria like <i>Streptococcus pneumoniae</i> and the flu virus. Regular hand hygiene and avoiding close contact with sick individuals can also help reduce the risk of pneumonia.</p>
+            </section>
+            
+        </section>
 
-    <script>
-        const uploadForm = document.getElementById('upload-form');
-        const imagePreview = document.getElementById('image-preview');
-        const prediction = document.getElementById('prediction');
+        <section id="requirements" class="content-section">
+            <h2>Image Requirements</h2>
+            <p>For accurate detection, please ensure that the X-ray images you upload meet the following requirements:</p>
+            <ol>
+                <li>Image file format must be .jpg, .png, or .jpeg.</li>
+                <li>Image size should not exceed 5MB.</li>
+                <li>Resolution should be at least 512 x 512.</li>
+                <li>The X-ray image should be clear, without blurring.</li>
+                <li>Ensure that the image covers the full lung area.</li>
+                <li>Avoid any overlay texts or watermarks on the image.</li>
+                <li>Contrast and brightness should not be altered.</li>
+                <li>No editing or enhancements should be applied to the X-ray.</li>
+                <li>Black and white images are preferred.</li>
+                <li>File names should not contain special characters.</li>
+            </ol>
+        </section>
 
-        uploadForm.addEventListener('submit', (event) => {
-            event.preventDefault(); // Prevent default form submission
+        <section id="upload" class="content-section">
+            <h2>Image Upload</h2>
+            <p>To proceed with pneumonia detection, please ensure that the X-ray image meets the above requirements. Once ready, select an image to upload for analysis.</p>
+            <form action="upload.php" method="post" enctype="multipart/form-data">
+                <input type="file" name="xray" accept="image/*" class="file-input">
+                <button type="submit" class="upload-button">Upload Image</button>
+            </form>
+        </section>
+        <section id="images" class="image-showcase hidden">
+            <div class="image-container">
+                <img src="https://cdn.pixabay.com/photo/2015/02/26/15/40/doctor-650534_640.jpg" alt="Doctor">
+                <p>Expert medical professionals</p>
+            </div>
+            <div class="image-container">
+                <img src="https://plus.unsplash.com/premium_photo-1702598764238-14bf18bc9c11?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8Y2hlc3QlMjB4JTIwcmF5fGVufDB8fDB8fHww" alt="Chest X-Ray">
+                <p>High-quality chest X-ray imaging</p>
+            </div>
+            <div class="image-container">
+                <img src="https://plus.unsplash.com/premium_photo-1666299771986-7c94dac6a812?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8RG9jdG9yJTIwaG9sZGluZyUyMGNoZXN0JTIweCUyMHJheSUyMGltYWdlfGVufDB8fDB8fHww" alt="Doctor Holding X-Ray">
+                <p>Advanced diagnostic tools</p>
+            </div>
+        </section>
 
-            const file = document.getElementById('image').files[0];
-            const formData = new FormData();
-            formData.append('image', file);
 
-            fetch('/upload_image', {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.json())
-            .then(data => {
-                prediction.textContent = 'Prediction: ' + data.result;
-                imagePreview.src = URL.createObjectURL(file); // Display uploaded image preview
-            })
-            .catch(error => {
-                console.error(error);
-                prediction.textContent = 'Error processing image.';
-            });
-        });
-    </script>
+    <script src="/static/script.js"></script>
 </body>
 </html>

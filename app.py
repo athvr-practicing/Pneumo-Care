@@ -1,71 +1,80 @@
-from flask import Flask, request, jsonify
-from werkzeug.utils import secure_filename
-import tensorflow as tf
-import pickle
 import os
-from PIL import Image
+from flask import Flask, request, render_template, jsonify
+import pickle
 import numpy as np
+from PIL import Image
+from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
 
-# Load the model (using pickle)
-with open('model.pkl', 'rb') as f:
-    model = pickle.load(f)
+# Load the trained model
+model_path = 'model.pkl'
+model = pickle.load(open(model_path, 'rb'))
 
-# Create uploads directory if it doesn't exist
-if not os.path.exists('uploads'):
-    os.makedirs('uploads')
+# Configure upload folder and allowed file extensions
+UPLOAD_FOLDER = 'static/uploaded_images'
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
+
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
+# Ensure the upload folder exists
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+
+def allowed_file(filename):
+    """Check if a file is allowed based on its extension."""
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 def preprocess_image(image_path):
-    # Load image
-    img = Image.open(image_path)
-    
-    # Resize image to match the input size of your model (example: 224x224)
-    img = img.resize((224, 224))
-    
-    # Convert image to numpy array and normalize (e.g., scaling pixel values to [0, 1])
-    img_array = np.array(img) / 255.0
-    
-    # Add batch dimension (model expects a batch of images)
-    img_array = np.expand_dims(img_array, axis=0)
-    
+    """
+    Preprocess the uploaded image to match the input shape for the model.
+    Assumes the model takes 512x512 grayscale images.
+    """
+    img = Image.open(image_path).convert('L')  # Convert to grayscale
+    img = img.resize((512, 512))  # Resize to model input size
+    img_array = np.array(img) / 255.0  # Normalize pixel values
+    img_array = img_array.reshape(1, 512, 512, 1)  # Add batch and channel dimensions
     return img_array
+
+@app.route('/')
+def home():
+    """Render the homepage."""
+    return render_template('index.html')
 
 @app.route('/upload_image', methods=['POST'])
 def upload_image():
-    file = request.files['image']
-    if file:
+    """
+    Handle image uploads, preprocess the image,
+    and return the prediction.
+    """
+    if 'xray' not in request.files:
+        return jsonify({'error': 'No file part'}), 400
+
+    file = request.files['xray']
+    if file.filename == '':
+        return jsonify({'error': 'No selected file'}), 400
+
+    if file and allowed_file(file.filename):
         filename = secure_filename(file.filename)
-        file_path = os.path.join('uploads', filename)
+        file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
         file.save(file_path)
 
         # Preprocess the image
-        image = preprocess_image(file_path)
+        try:
+            processed_image = preprocess_image(file_path)
+        except Exception as e:
+            return jsonify({'error': 'Failed to process the image', 'details': str(e)}), 500
 
-        # Make prediction
-        prediction = model.predict(image)
+        # Get prediction
+        try:
+            prediction = model.predict(processed_image)
+            result = "Pneumonia Detected" if prediction[0] == 1 else "No Pneumonia Detected"
+        except Exception as e:
+            return jsonify({'error': 'Model prediction failed', 'details': str(e)}), 500
 
-        # Convert prediction to a human-readable format
-        result = "Pneumonia" if prediction[0][0] > 0.5 else "Normal"
+        # Return the result
+        return jsonify({'filename': filename, 'result': result}), 200
 
-        return jsonify({'result': result})
+    return jsonify({'error': 'Invalid file type'}), 400
 
-@app.route('/prediction', methods=['GET'])
-def get_prediction():
-    image_id = request.args.get('image_id')
-    # Retrieve the image path from your database or temporary storage
-    image_path = get_image_path(image_id) # type: ignore
-
-    # Preprocess the image
-    image = preprocess_image(image_path)
-
-    # Make prediction
-    prediction = model.predict(image)
-
-    # Convert prediction to a human-readable format
-    result = "Pneumonia" if prediction[0][0] > 0.5 else "Normal"
-
-    return jsonify({'result': result})
-
-if __name__ == '_main_':
+if __name__ == '__main__':
     app.run(debug=True)
