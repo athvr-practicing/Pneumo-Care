@@ -27,12 +27,12 @@ def allowed_file(filename):
 def preprocess_image(image_path):
     """
     Preprocess the uploaded image to match the input shape for the model.
-    Assumes the model takes 512x512 grayscale images.
+    Assumes the model takes 200x200 RGB images.
     """
-    img = Image.open(image_path).convert('L')  # Convert to grayscale
-    img = img.resize((512, 512))  # Resize to model input size
+    img = Image.open(image_path).convert('RGB')  # Convert to RGB
+    img = img.resize((200, 200))  # Resize to 200x200, which is the expected input size
     img_array = np.array(img) / 255.0  # Normalize pixel values
-    img_array = img_array.reshape(1, 512, 512, 1)  # Add batch and channel dimensions
+    img_array = img_array.reshape(1, 200, 200, 3)  # Add batch and channel dimensions
     return img_array
 
 @app.route('/')

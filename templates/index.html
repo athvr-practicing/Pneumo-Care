@@ -64,7 +64,7 @@
         <section id="upload" class="content-section">
             <h2>Image Upload</h2>
             <p>To proceed with pneumonia detection, please ensure that the X-ray image meets the above requirements. Once ready, select an image to upload for analysis.</p>
-            <form action="upload.php" method="post" enctype="multipart/form-data">
+            <form action="/upload_image" method="post" enctype="multipart/form-data">
                 <input type="file" name="xray" accept="image/*" class="file-input">
                 <button type="submit" class="upload-button">Upload Image</button>
             </form>
