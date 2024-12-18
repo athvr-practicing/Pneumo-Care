@@ -2,26 +2,27 @@ body {
     margin: 0;
     font-family: 'Arial', sans-serif;
     color: white;
-    background-image: url('/static/images/photo1.jpg');
+    background-image: url('/photo1.jpg');
     background-size: cover;
     background-attachment: fixed;
     background-position: center;
     overflow-x: hidden;
 }
+
 header {
     text-align: center;
     background: rgba(0, 0, 0, 0.7);
     padding: 20px;
 }
+
 header h1 {
     font-size: 3rem;
     color: gold;
-    margin: 0;
 }
+
 header p {
     margin: 10px 0;
     font-size: 1.2rem;
-    color: white;
 }
 
 nav {
@@ -35,7 +36,6 @@ nav button {
     color: gold;
     border: none;
     border-radius: 5px;
-    font-size: 1rem;
     cursor: pointer;
     transition: background-color 0.3s;
 }
@@ -56,72 +56,35 @@ nav button:hover {
 .content-section h2 {
     color: gold;
     text-align: center;
-    margin-bottom: 10px;
 }
 
-.content-section p, ol {
-    line-height: 1.6;
+.result-section {
+    margin-top: 20px;
+    padding: 10px;
+    color: white;
+    background: rgba(0, 0, 0, 0.8);
+    border-radius: 5px;
 }
 
-ol li {
-    margin: 5px 0;
+.file-input {
+    margin: 10px 0;
 }
 
 .upload-button {
-    display: inline-block;
     margin-top: 10px;
     padding: 10px 25px;
     background-color: gold;
     color: black;
     border: none;
     border-radius: 5px;
-    font-size: 1rem;
     cursor: pointer;
-    transition: background-color 0.3s, transform 0.3s;
+    transition: background-color 0.3s;
 }
 
 .upload-button:hover {
     background-color: darkorange;
-    transform: scale(1.05);
 }
 
-.file-input {
-    margin: 10px 0;
-}
-.image-showcase {
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    margin: 20px auto;
-    flex-wrap: wrap;
-    padding: 20px;
-    background: rgba(0, 0, 0, 0.6);
-    border-radius: 10px;
-    transition: opacity 1s;
-}
-
-.image-showcase .image-container {
-    text-align: center;
-    margin: 10px;
-}
-
-.image-showcase .image-container img {
-    width: 250px;
-    height: 250px;
-    border-radius: 10px;
-    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.5);
-    transition: transform 0.5s;
-}
-
-.image-showcase .image-container img:hover {
-    transform: scale(1.1);
-}
-
-.image-showcase .image-container p {
-    margin-top: 10px;
-    font-size: 1rem;
-    color: gold;
-}
 @keyframes fadeIn {
     from {
         opacity: 0;
@@ -132,8 +95,4 @@ ol li {
         transform: translateY(0);
     }
 }
-.hidden {
-    display: none;
-}
-
 
